@@ -22,7 +22,7 @@ capture_array = np.array((N_TIME_CAPTURES, 2))
 i=0
 
 def array_write(gpio, level, tick):
-    logging.debug(f'Function call back {i}. Meassure {MEASURE}')
+    logging.debug(f'Function callback {i}. Meassure {MEASURE}')
     capture_array[i] = tick, level
     i += 1
     if i == (N_TIME_CAPTURES - 1):
@@ -54,7 +54,7 @@ while MEASURE:
     try:
         logging.debug(f'Executing sampling.')
     except KeyboardInterrupt:
-        logging.warning(f'Sampling interrupted by key board action.')
+        logging.warning(f'Sampling interrupted by keyboard action.')
         break
                 
 cb.cancel() 
