@@ -56,10 +56,9 @@ while MEASURE:
         logging.debug(f'Executing sampling.')
     except KeyboardInterrupt:
         logging.warning(f'Sampling interrupted by keyboard action.')
+        cb.cancel()
         break
                 
- 
-
 end_time = time.time()
 
 logging.info(f'Finished sampling.')
