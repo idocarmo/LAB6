@@ -26,6 +26,7 @@ def array_write(gpio, level, tick):
     capture_array[i] = tick, level
     i += 1
     if i == (N_TIME_CAPTURES - 1):
+            cb.cancel()
             MEASURE = False
 
 start_time = time.time()
@@ -57,7 +58,7 @@ while MEASURE:
         logging.warning(f'Sampling interrupted by keyboard action.')
         break
                 
-cb.cancel() 
+ 
 
 end_time = time.time()
 
