@@ -6,26 +6,26 @@ import time
 import logging
 
 logging.basicConfig(
-    level = logging.DEBUG,
-    format = '%(levelname)s:%(message)s'
+    level = logging.INFO,
+    format = '%(message)s'
     )
 
 logging.info('Loading Variables...')
 
-GPIO = 27
+GPIO = 16
 
-N_BITS = 16*100
+N_BITS = 16*1000
 N_TIME_CAPTURES = N_BITS + 2 + 1
 MEASURE = True
 
-capture_array = np.array((N_TIME_CAPTURES, 2))
+capture_array = np.zeros((N_TIME_CAPTURES, 2), dtype=int)
 i=0
 
 def array_write(gpio, level, tick):
-    logging.debug(f'Function callback {i}. Meassure {MEASURE}')
+    global i, capture_array, MEASURE
     capture_array[i] = tick, level
     i += 1
-    if i == (N_TIME_CAPTURES - 1):
+    if i == (N_TIME_CAPTURES):
             cb.cancel()
             MEASURE = False
 
@@ -48,12 +48,12 @@ pi.set_pull_up_down(GPIO, pigpio.PUD_DOWN)
 
 # Define the callback that will execute the sampling
 cb = pi.callback(GPIO, pigpio.RISING_EDGE, array_write)
-logging.info('Configuring input and sampling...')
 
 logging.info(f'Sampling the gpio {GPIO}. It may take a while...')
 while MEASURE:
     try:
         logging.debug(f'Executing sampling.')
+        pass
     except KeyboardInterrupt:
         logging.warning(f'Sampling interrupted by keyboard action.')
         cb.cancel()
@@ -65,9 +65,8 @@ logging.info(f'Finished sampling.')
 logging.info(f'Execution time: {end_time - start_time}')
 
 logging.info(f'Saving the sampling values file...')
-np.savetxt(capture_array, "peaksfile_" + str(start_time) + ".csv", delimiter=",")
+np.savetxt("peaksfile_" + str(start_time) + ".csv", capture_array, delimiter=",")
 
 logging.info(f'All done.')
 
-pi.stop()
-
+pi.stop()   
